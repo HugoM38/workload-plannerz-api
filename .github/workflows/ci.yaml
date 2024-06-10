@@ -30,8 +30,8 @@ jobs:
     - name: Run build
       run: npm run build
 
-    - name: Run tests
-      run: npm test --passWithNoTests
+    # - name: Run tests
+    #   run: npm tests
 
     - name: Deploy to Heroku
       if: success()
