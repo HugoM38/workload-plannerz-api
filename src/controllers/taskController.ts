@@ -4,8 +4,8 @@ import { createTask } from "../services/taskService";
 const newTask = async (req: Request, res: Response) => {
   try {
     const { name, owner, team, priority, dueDate } = req.body;
-    const user = await createTask(name, owner, team, priority, dueDate);
-    res.status(201).json(user);
+    const task = await createTask(name, owner, team, priority, dueDate);
+    res.status(201).json(task);
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === "Team not found") {
