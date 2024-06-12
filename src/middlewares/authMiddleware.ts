@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 interface JwtPayload {
-  userId: string;
+  id: string;
 }
 
 const authMiddleware = (req: Request & { user?: string }, res: Response, next: NextFunction) => {
@@ -11,7 +11,7 @@ const authMiddleware = (req: Request & { user?: string }, res: Response, next: N
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
-    req.user = decoded.userId;
+    req.user = decoded.id;
     next();
   } catch (err) {
     res.status(401).json({ message: 'Token is not valid' });
