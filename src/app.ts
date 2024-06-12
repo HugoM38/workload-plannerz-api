@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
 import dotenv from 'dotenv';
+import taskRoutes from './routes/taskRoutes';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 5001;
 app.use(bodyParser.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
 mongoose.connect(process.env.MONGODB_URI as string)
   .then(() => console.log('MongoDB connected'))
