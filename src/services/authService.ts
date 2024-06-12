@@ -11,14 +11,14 @@ const register = async (firstname: string, lastname: string, job: string, email:
 };
 
 const login = async (email: string, password: string) => {
-  const user = await User.findOne({ email });
-  if (!user) throw new Error('User not found');
+  const findUser = await User.findOne({ email });
+  if (!findUser) throw new Error('User not found');
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, findUser.password);
   if (!isMatch) throw new Error('Invalid credentials');
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
-  return { token, user };
+  const token = jwt.sign({ id: findUser._id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
+  return { token, user: findUser };
 };
 
 export { register, login };
