@@ -2,10 +2,10 @@ import { Router } from 'express';
 import validateRequest from '../middlewares/validateRequest';
 import authMiddleware from '../middlewares/authMiddleware';
 import { createTeamSchema } from '../schemas/teams/createTeamSchema';
-import { newTeam } from '../controllers/teamController';
+import { getTeams } from '../controllers/userController';
 
 const router = Router();
 
-router.post('/create', authMiddleware ,validateRequest(createTeamSchema), newTeam);
+router.get('/teams', authMiddleware, getTeams);
 
 export default router;
