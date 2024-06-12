@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getTeamsByUser } from "../services/userService";
 
-const getTeams = async (req: Request, res: Response) => {
+const getTeams = async (req: Request & { user?: string }, res: Response) => {
   try {
     const userId = req.user;
     const teams = await getTeamsByUser(userId!);
@@ -9,7 +9,7 @@ const getTeams = async (req: Request, res: Response) => {
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
+        return res.status(404).json({ error: "User not found", user: req.user });
       }
       res.status(400).json({ error: error.message });
     } else {

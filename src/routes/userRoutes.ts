@@ -1,7 +1,5 @@
-import { Router } from 'express';
-import validateRequest from '../middlewares/validateRequest';
+import { Router } from 'express';;
 import authMiddleware from '../middlewares/authMiddleware';
-import { createTeamSchema } from '../schemas/teams/createTeamSchema';
 import { getTeams } from '../controllers/userController';
 
 const router = Router();
