@@ -5,7 +5,7 @@ const getTeams = async (req: Request & { user?: string }, res: Response) => {
   try {
     const userId = req.user;
     const teams = await getTeamsByUser(userId!);
-    res.status(201).json(teams);
+    res.status(200).json(teams);
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === "User not found") {
