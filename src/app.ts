@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes';
 import dotenv from 'dotenv';
 import taskRoutes from './routes/taskRoutes';
 import teamRoutes from './routes/teamRoutes';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/teams', teamRoutes);
+app.use('/api/users', userRoutes);
 
 mongoose.connect(process.env.MONGODB_URI as string)
   .then(() => console.log('MongoDB connected'))
