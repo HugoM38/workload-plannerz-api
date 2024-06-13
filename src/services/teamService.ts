@@ -82,4 +82,22 @@ const deleteMemberFromTeam = async (teamId: string, userId: string, requesterId:
   return await team.save();
 }
 
-export { createTeam, newMemberToTeam, getTeamMembersById, deleteMemberFromTeam };
+const changeTeamOwner = async (teamId: string, userId: string, requesterId: string) => {
+  const team = await Team.findById(teamId);
+  if (!team) {
+    throw new Error("Team not found");
+  }
+
+  if (String(team.owner) !== requesterId) {
+    throw new Error("You are not the owner of this team");
+  }
+
+  if (!team.members.includes(new mongoose.Types.ObjectId(userId))) {
+    throw new Error("User is not a member of this team");
+  }
+
+  team.owner = new mongoose.Types.ObjectId(userId);
+  return await team.save();
+}
+
+export { createTeam, newMemberToTeam, getTeamMembersById, deleteMemberFromTeam, changeTeamOwner };
