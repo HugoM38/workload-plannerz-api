@@ -3,6 +3,7 @@ import {
   changeTeamOwner,
   createTeam,
   deleteMemberFromTeam,
+  getNonMembersInTeam,
   getTeamMembersById,
   newMemberToTeam,
 } from "../services/teamService";
@@ -128,6 +129,38 @@ const changeOwner = async (req: Request & { user?: string }, res: Response) => {
       res.status(400).json({ error: "An unknown error occurred" });
     }
   }
-}
+};
 
-export { newTeam, addMemberToTeam, getTeamMembers, removeMemberFromTeam, changeOwner };
+const getNonMembers = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { teamId } = req.params;
+
+  try {
+    const nonMembers = await getNonMembersInTeam(teamId, req.user!);
+    res.status(200).json(nonMembers);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      } else if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+export {
+  newTeam,
+  addMemberToTeam,
+  getTeamMembers,
+  removeMemberFromTeam,
+  changeOwner,
+  getNonMembers
+};
