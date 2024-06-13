@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createTeam } from "../services/teamService";
+import { createTeam, newMemberToTeam } from "../services/teamService";
 
 const newTeam = async (req: Request, res: Response) => {
   try {
@@ -18,4 +18,21 @@ const newTeam = async (req: Request, res: Response) => {
   }
 };
 
-export { newTeam };
+const addMemberToTeam = async (req: Request & { user?: string }, res: Response) => {
+  const { teamId } = req.params;
+  const { userId } = req.body;
+
+  try {
+    const team = await newMemberToTeam(teamId, userId, req.user!);
+    res.status(200).json(team);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+
+export { newTeam, addMemberToTeam };

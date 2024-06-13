@@ -19,4 +19,31 @@ const createTeam = async (name: string, owner: string) => {
   return await newTeam.save();
 };
 
-export { createTeam };
+const newMemberToTeam = async (
+  teamId: string,
+  userId: string,
+  requesterId: string
+) => {
+  const team = await Team.findById(teamId);
+  if (!team) {
+    throw new Error("Team not found");
+  }
+
+  if (String(team.owner) !== requesterId) {
+    throw new Error("You are not the owner of this team");
+  }
+
+  const user = await userModel.findById(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (team.members.includes(new mongoose.Types.ObjectId(userId))) {
+    throw new Error("User is already a member of this team");
+  }
+
+  team.members.push(new mongoose.Types.ObjectId(userId));
+  return await team.save();
+};
+
+export { createTeam, newMemberToTeam };
