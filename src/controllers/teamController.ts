@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { createTeam, newMemberToTeam } from "../services/teamService";
+import {
+  createTeam,
+  getTeamMembersById,
+  newMemberToTeam,
+} from "../services/teamService";
 
 const newTeam = async (req: Request, res: Response) => {
   try {
@@ -18,7 +22,10 @@ const newTeam = async (req: Request, res: Response) => {
   }
 };
 
-const addMemberToTeam = async (req: Request & { user?: string }, res: Response) => {
+const addMemberToTeam = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
   const { teamId } = req.params;
   const { userId } = req.body;
 
@@ -27,6 +34,15 @@ const addMemberToTeam = async (req: Request & { user?: string }, res: Response) 
     res.status(200).json(team);
   } catch (error) {
     if (error instanceof Error) {
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      } else if (error.message === "You are not the owner of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not the owner of this team" });
+      } else if (error.message === "User not found") {
+        return res.status(404).json({ error: "User not found" });
+      }
       res.status(400).json({ error: error.message });
     } else {
       res.status(400).json({ error: "An unknown error occurred" });
@@ -34,5 +50,29 @@ const addMemberToTeam = async (req: Request & { user?: string }, res: Response) 
   }
 };
 
+const getTeamMembers = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { teamId } = req.params;
 
-export { newTeam, addMemberToTeam };
+  try {
+    const members = await getTeamMembersById(teamId, req.user!);
+    res.status(200).json(members);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      } else if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+export { newTeam, addMemberToTeam, getTeamMembers };

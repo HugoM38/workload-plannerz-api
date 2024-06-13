@@ -46,4 +46,18 @@ const newMemberToTeam = async (
   return await team.save();
 };
 
-export { createTeam, newMemberToTeam };
+const getTeamMembersById = async (teamId: string, requesterId: string) => {
+  const team = await Team.findById(teamId);
+  if (!team) {
+    throw new Error("Team not found");
+  }
+
+  const membersIds = team.members.map((member) => member.toString());
+  if (!membersIds.includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  return await userModel.find({ _id: { $in: team.members } });
+}
+
+export { createTeam, newMemberToTeam, getTeamMembersById };
