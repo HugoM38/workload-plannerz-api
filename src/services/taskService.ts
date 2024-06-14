@@ -1,5 +1,5 @@
 import Task from "../models/taskModel";
-import teamModel from "../models/teamModel";
+import Team from "../models/teamModel";
 import userModel from "../models/userModel";
 import mongoose from "mongoose";
 
@@ -11,7 +11,7 @@ const createTask = async (
   dueDate: number
 ) => {
   const teamId = new mongoose.Types.ObjectId(team);
-  const findTeam = await teamModel.findOne({ _id: teamId });
+  const findTeam = await Team.findOne({ _id: teamId });
   if (!findTeam) throw new Error("Team not found");
 
   if (owner === undefined) {
@@ -33,4 +33,23 @@ const createTask = async (
   }
 };
 
-export { createTask };
+const getTasksOfATeamByUserId = async (
+  userId: string,
+  teamId: string,
+  requesterId: string
+) => {
+  const ownerId = new mongoose.Types.ObjectId(userId);
+  const findUser = await userModel.findOne({ _id: ownerId });
+  if (!findUser) throw new Error("User not found");
+
+  const team = await Team.findById(teamId);
+  if (!team) throw new Error("Team not found");
+
+  if (!team.members.map((member) => member.toString()).includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  return await Task.find({ owner: ownerId, team: teamId });
+};
+
+export { createTask, getTasksOfATeamByUserId };
