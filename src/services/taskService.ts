@@ -52,4 +52,86 @@ const getTasksOfATeamByUserId = async (
   return await Task.find({ owner: ownerId, team: teamId });
 };
 
-export { createTask, getTasksOfATeamByUserId };
+const updateTaskPriorityById = async (
+  taskId: string,
+  priority: number,
+  requesterId: string
+) => {
+  const task = await Task.findById(taskId);
+  if (!task) throw new Error("Task not found");
+
+  const team = await Team.findById(task.team);
+  if (!team) throw new Error("Team not found");
+
+  if (!team.members.map((member) => member.toString()).includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  task.priority = priority;
+  return await task.save();
+};
+
+const updateTaskDueDateById = async (
+  taskId: string,
+  dueDate: number,
+  requesterId: string
+) => {
+  const task = await Task.findById(taskId);
+  if (!task) throw new Error("Task not found");
+
+  const team = await Team.findById(task.team);
+  if (!team) throw new Error("Team not found");
+
+  if (!team.members.map((member) => member.toString()).includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  task.dueDate = dueDate;
+  return await task.save();
+};
+
+const updateTaskOwnerById = async (
+  taskId: string,
+  owner: string,
+  requesterId: string
+) => {
+  const task = await Task.findById(taskId);
+  if (!task) throw new Error("Task not found");
+
+  const team = await Team.findById(task.team);
+  if (!team) throw new Error("Team not found");
+
+  if (!team.members.map((member) => member.toString()).includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  const ownerId = new mongoose.Types.ObjectId(owner);
+  const findUser = await userModel.findOne({ _id: ownerId });
+  if (!findUser) throw new Error("User not found");
+
+  task.owner = ownerId;
+  return await task.save();
+};
+
+const deleteTaskById = async (taskId: string, requesterId: string) => {
+  const task = await Task.findById(taskId);
+  if (!task) throw new Error("Task not found");
+
+  const team = await Team.findById(task.team);
+  if (!team) throw new Error("Team not found");
+
+  if (!team.members.map((member) => member.toString()).includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  return await Task.findByIdAndDelete(taskId);
+};
+
+export {
+  createTask,
+  getTasksOfATeamByUserId,
+  updateTaskPriorityById,
+  updateTaskDueDateById,
+  updateTaskOwnerById,
+  deleteTaskById,
+};

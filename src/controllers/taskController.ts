@@ -1,5 +1,12 @@
 import { Request, Response } from "express";
-import { createTask, getTasksOfATeamByUserId } from "../services/taskService";
+import {
+  createTask,
+  deleteTaskById,
+  getTasksOfATeamByUserId,
+  updateTaskDueDateById,
+  updateTaskOwnerById,
+  updateTaskPriorityById,
+} from "../services/taskService";
 
 const newTask = async (req: Request, res: Response) => {
   try {
@@ -44,4 +51,130 @@ const getTasksOfATeamByUser = async (
   }
 };
 
-export { newTask, getTasksOfATeamByUser };
+const updateTaskPriority = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { taskId } = req.params;
+  const { priority } = req.body;
+
+  try {
+    const task = await updateTaskPriorityById(taskId, priority, req.user!);
+    res.status(200).json(task);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Task not found") {
+        return res.status(404).json({ error: "Task not found" });
+      }
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+const updateTaskDueDate = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { taskId } = req.params;
+  const { dueDate } = req.body;
+
+  try {
+    const task = await updateTaskDueDateById(taskId, dueDate, req.user!);
+    res.status(200).json(task);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Task not found") {
+        return res.status(404).json({ error: "Task not found" });
+      }
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+const updateTaskOwner = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { taskId } = req.params;
+  const { ownerId } = req.body;
+
+  try {
+    const task = await updateTaskOwnerById(taskId, ownerId, req.user!);
+    res.status(200).json(task);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Task not found") {
+        return res.status(404).json({ error: "Task not found" });
+      }
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      if (error.message === "User not found") {
+        return res.status(404).json({ error: "User not found" });
+      }
+      if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+const deleteTask = async (req: Request & { user?: string }, res: Response) => {
+  const { taskId } = req.params;
+
+  try {
+    await deleteTaskById(taskId, req.user!);
+    res.status(204).end();
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Task not found") {
+        return res.status(404).json({ error: "Task not found" });
+      }
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+export {
+  newTask,
+  getTasksOfATeamByUser,
+  updateTaskPriority,
+  updateTaskDueDate,
+  updateTaskOwner,
+  deleteTask,
+};
