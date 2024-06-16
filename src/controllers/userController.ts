@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getTeamsByUser } from "../services/userService";
+import { getTeamsByUser, getUserById } from "../services/userService";
 
 const getTeams = async (req: Request & { user?: string }, res: Response) => {
   try {
@@ -18,4 +18,21 @@ const getTeams = async (req: Request & { user?: string }, res: Response) => {
   }
 };
 
-export { getTeams };
+const getUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const user = await getUserById(userId);
+    res.status(200).json(user);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "User not found") {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+}
+
+export { getTeams, getUser };

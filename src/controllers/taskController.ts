@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   createTask,
   deleteTaskById,
+  getTasksOfATeamById,
   getTasksOfATeamByUserId,
   updateTaskDueDateById,
   updateTaskOwnerById,
@@ -38,11 +39,16 @@ const getTasksOfATeamByUser = async (
     res.status(200).json(tasks);
   } catch (error) {
     if (error instanceof Error) {
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      }
       if (error.message === "User not found") {
         return res.status(404).json({ error: "User not found" });
       }
-      if (error.message === "User not authorized") {
-        return res.status(403).json({ error: "User not authorized" });
+      if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
       }
       res.status(400).json({ error: error.message });
     } else {
@@ -170,9 +176,33 @@ const deleteTask = async (req: Request & { user?: string }, res: Response) => {
   }
 };
 
+const getTasksOfATeam = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { teamId } = req.params;
+  try {
+    const tasks = await getTasksOfATeamById(teamId, req.user!);
+    res.status(200).json(tasks);
+  } catch (error) {
+    if (error instanceof Error) {
+      if(error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      if(error.message === "You are not a member of this team") {
+        return res.status(403).json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
 export {
   newTask,
   getTasksOfATeamByUser,
+  getTasksOfATeam,
   updateTaskPriority,
   updateTaskDueDate,
   updateTaskOwner,

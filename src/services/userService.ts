@@ -10,4 +10,12 @@ const getTeamsByUser = async (userId: string) => {
     return await Team.find({ members: userId });
 };
 
-export { getTeamsByUser };
+const getUserById = async (userId: string) => {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const user = await userModel.findOne({ _id: userObjectId });
+    if (!user) throw new Error("User not found");
+
+    return user;
+}
+
+export { getTeamsByUser, getUserById };

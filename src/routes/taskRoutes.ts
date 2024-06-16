@@ -4,6 +4,7 @@ import authMiddleware from "../middlewares/authMiddleware";
 import { createTaskSchema } from "../schemas/tasks/createTaskSchema";
 import {
   deleteTask,
+  getTasksOfATeam,
   getTasksOfATeamByUser,
   newTask,
   updateTaskDueDate,
@@ -23,6 +24,7 @@ router.post(
   newTask
 );
 router.get("/:teamId/:userId", authMiddleware, getTasksOfATeamByUser);
+router.get("/:teamId", authMiddleware, getTasksOfATeam);
 router.patch(
   "/:taskId/priority",
   authMiddleware,
