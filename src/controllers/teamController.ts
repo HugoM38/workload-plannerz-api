@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  changeTeamName,
   changeTeamOwner,
   createTeam,
   deleteMemberFromTeam,
@@ -131,6 +132,29 @@ const changeOwner = async (req: Request & { user?: string }, res: Response) => {
   }
 };
 
+const changeName = async (req: Request & { user?: string }, res: Response) => {
+  const { teamId } = req.params;
+  const { name } = req.body;
+
+  try {
+    const team = await changeTeamName(teamId, name, req.user!);
+    res.status(200).json(team);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      } else if (error.message === "You are not the owner of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not the owner of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+}
+
 const getNonMembers = async (
   req: Request & { user?: string },
   res: Response
@@ -162,5 +186,6 @@ export {
   getTeamMembers,
   removeMemberFromTeam,
   changeOwner,
+  changeName,
   getNonMembers
 };

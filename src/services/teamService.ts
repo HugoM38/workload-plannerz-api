@@ -100,6 +100,20 @@ const changeTeamOwner = async (teamId: string, userId: string, requesterId: stri
   return await team.save();
 }
 
+const changeTeamName = async (teamId: string, newName: string, requesterId: string) => {
+  const team = await Team.findById(teamId);
+  if (!team) {
+    throw new Error("Team not found");
+  }
+
+  if (String(team.owner) !== requesterId) {
+    throw new Error("You are not the owner of this team");
+  }
+
+  team.name = newName;
+  return await team.save();
+}
+
 const getNonMembersInTeam = async (teamId: string, requesterId: string) => {
   const team = await Team.findById(teamId);
   if (!team) {
@@ -114,4 +128,4 @@ const getNonMembersInTeam = async (teamId: string, requesterId: string) => {
   return await userModel.find({ _id: { $nin: membersIds } });
 }
 
-export { createTeam, newMemberToTeam, getTeamMembersById, deleteMemberFromTeam, changeTeamOwner, getNonMembersInTeam };
+export { createTeam, newMemberToTeam, getTeamMembersById, deleteMemberFromTeam, changeTeamOwner, changeTeamName, getNonMembersInTeam };
