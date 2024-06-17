@@ -17,7 +17,7 @@ const TaskSchema: Schema = new Schema({
   team: { type: ObjectId, ref: 'Team', required: true },
   priority: { type: Number, required: true },
   dueDate: { type: Number, required: true },
-  state: { type: String, required: false },
+  state: { type: String, required: false, default: "En cours" },
   creationDate: { type: Number, required: false, default: Date.now()}
 });
 
