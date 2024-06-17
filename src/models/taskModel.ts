@@ -16,8 +16,6 @@ const TaskSchema: Schema = new Schema({
   owner: { type: ObjectId, ref: 'User', required: false },
   team: { type: ObjectId, ref: 'Team', required: true },
   priority: { type: Number, required: true },
-  state: { type: String, required: true },
-  creationDate: { type: Number, required: true },
   dueDate: { type: Number, required: true },
 });
 
