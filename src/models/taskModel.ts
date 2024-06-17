@@ -17,6 +17,8 @@ const TaskSchema: Schema = new Schema({
   team: { type: ObjectId, ref: 'Team', required: true },
   priority: { type: Number, required: true },
   dueDate: { type: Number, required: true },
+  state: { type: String, required: false },
+  creationDate: { type: Number, required: false, default: Date.now()}
 });
 
 export default mongoose.model<ITask>("Task", TaskSchema);
