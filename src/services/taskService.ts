@@ -27,6 +27,8 @@ const createTask = async (
       owner: ownerId,
       team: teamId,
       priority,
+      state: "En cours",
+      creationDate: Date.now(),
       dueDate,
     });
     return await newTask.save();
