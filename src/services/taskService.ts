@@ -115,6 +115,21 @@ const updateTaskOwnerById = async (
   return await task.save();
 };
 
+const validateTaskById = async (taskId: string, requesterId: string) => {
+  const task = await Task.findById(taskId);
+  if (!task) throw new Error("Task not found");
+
+  const team = await Team.findById(task.team);
+  if (!team) throw new Error("Team not found");
+
+  if (!team.members.map((member) => member.toString()).includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  task.state = "Validée";
+  return await task.save();
+};
+
 const deleteTaskById = async (taskId: string, requesterId: string) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Task not found");
@@ -138,7 +153,7 @@ const getTasksOfATeamById = async (teamId: string, requesterId: string) => {
   }
 
   return await Task.find({ team: teamId });
-}
+};
 
 export {
   createTask,
@@ -147,5 +162,6 @@ export {
   updateTaskPriorityById,
   updateTaskDueDateById,
   updateTaskOwnerById,
+  validateTaskById,
   deleteTaskById,
 };

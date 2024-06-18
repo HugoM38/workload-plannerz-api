@@ -10,6 +10,7 @@ import {
   updateTaskDueDate,
   updateTaskOwner,
   updateTaskPriority,
+  validateTask,
 } from "../controllers/taskController";
 import { updateTaskPrioritySchema } from "../schemas/tasks/updateTaskPrioritySchema";
 import { updateTaskDueDateSchema } from "../schemas/tasks/updateTaskDueDateSchema";
@@ -42,6 +43,11 @@ router.patch(
   authMiddleware,
   validateRequest(updateTaskOwnerSchema),
   updateTaskOwner
+);
+router.patch(
+  "/:taskId/validate",
+  authMiddleware,
+  validateTask
 );
 router.delete("/:taskId", authMiddleware, deleteTask);
 

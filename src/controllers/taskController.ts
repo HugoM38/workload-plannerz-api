@@ -7,6 +7,7 @@ import {
   updateTaskDueDateById,
   updateTaskOwnerById,
   updateTaskPriorityById,
+  validateTaskById,
 } from "../services/taskService";
 
 const newTask = async (req: Request, res: Response) => {
@@ -150,6 +151,35 @@ const updateTaskOwner = async (
   }
 };
 
+const validateTask = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { taskId } = req.params;
+
+  try {
+    await validateTaskById(taskId, req.user!);
+    res.status(204).end();
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Task not found") {
+        return res.status(404).json({ error: "Task not found" });
+      }
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
 const deleteTask = async (req: Request & { user?: string }, res: Response) => {
   const { taskId } = req.params;
 
@@ -186,11 +216,13 @@ const getTasksOfATeam = async (
     res.status(200).json(tasks);
   } catch (error) {
     if (error instanceof Error) {
-      if(error.message === "Team not found") {
+      if (error.message === "Team not found") {
         return res.status(404).json({ error: "Team not found" });
       }
-      if(error.message === "You are not a member of this team") {
-        return res.status(403).json({ error: "You are not a member of this team" });
+      if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
       }
       res.status(400).json({ error: error.message });
     } else {
@@ -206,5 +238,6 @@ export {
   updateTaskPriority,
   updateTaskDueDate,
   updateTaskOwner,
+  validateTask,
   deleteTask,
 };
