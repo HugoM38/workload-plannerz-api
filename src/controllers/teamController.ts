@@ -189,8 +189,8 @@ const getMemberWorkload = async (
   const { teamId, memberId } = req.params;
 
   try {
-    const tasks = await getMemberWorkloadById(teamId, memberId, req.user!);
-    res.status(200).json(tasks);
+    const workload = await getMemberWorkloadById(teamId, memberId, req.user!);
+    res.status(200).json({workload});
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === "Team not found") {
@@ -220,8 +220,8 @@ const getTeamWorkload = async (
   const { teamId } = req.params;
 
   try {
-    const tasks = await getTeamWorkloadById(teamId, req.user!);
-    res.status(200).json(tasks);
+    const workload = await getTeamWorkloadById(teamId, req.user!);
+    res.status(200).json({workload});
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === "Team not found") {
