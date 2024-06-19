@@ -24,7 +24,7 @@ router.post(
   "/create",
   authMiddleware,
   validateRequest(createTaskSchema),
-  newTask
+  newTask,
 );
 router.get("/:teamId/:userId", authMiddleware, getTasksOfATeamByUser);
 router.get("/:teamId", authMiddleware, getTasksOfATeam);
@@ -32,31 +32,27 @@ router.patch(
   "/:taskId/priority",
   authMiddleware,
   validateRequest(updateTaskPrioritySchema),
-  updateTaskPriority
+  updateTaskPriority,
 );
 router.patch(
   "/:taskId/dueDate",
   authMiddleware,
   validateRequest(updateTaskDueDateSchema),
-  updateTaskDueDate
+  updateTaskDueDate,
 );
 router.patch(
   "/:taskId/owner",
   authMiddleware,
   validateRequest(updateTaskOwnerSchema),
-  updateTaskOwner
+  updateTaskOwner,
 );
 router.patch(
   "/:taskId/timeEstimation",
   authMiddleware,
   validateRequest(updateTimeEstimationSchema),
-  updateTimeEstimation
+  updateTimeEstimation,
 );
-router.patch(
-  "/:taskId/validate",
-  authMiddleware,
-  validateTask
-);
+router.patch("/:taskId/validate", authMiddleware, validateTask);
 router.delete("/:taskId", authMiddleware, deleteTask);
 
 export default router;

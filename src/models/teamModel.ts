@@ -9,8 +9,8 @@ export interface ITeam extends Document {
 
 const TeamSchema: Schema = new Schema({
   name: { type: String, required: true },
-  owner: { type: ObjectId, ref: 'User', required: true },
-  members: [{ type: ObjectId, ref: 'User' }],
+  owner: { type: ObjectId, ref: "User", required: true },
+  members: [{ type: ObjectId, ref: "User" }],
 });
 
 export default mongoose.model<ITeam>("Team", TeamSchema);

@@ -14,7 +14,14 @@ import {
 const newTask = async (req: Request, res: Response) => {
   try {
     const { name, owner, team, priority, timeEstimation, dueDate } = req.body;
-    const task = await createTask(name, owner, team, priority, timeEstimation, dueDate);
+    const task = await createTask(
+      name,
+      owner,
+      team,
+      priority,
+      timeEstimation,
+      dueDate,
+    );
     res.status(201).json(task);
   } catch (error) {
     if (error instanceof Error) {
@@ -33,7 +40,7 @@ const newTask = async (req: Request, res: Response) => {
 
 const getTasksOfATeamByUser = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { userId, teamId } = req.params;
   try {
@@ -61,7 +68,7 @@ const getTasksOfATeamByUser = async (
 
 const updateTaskPriority = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { taskId } = req.params;
   const { priority } = req.body;
@@ -91,7 +98,7 @@ const updateTaskPriority = async (
 
 const updateTaskDueDate = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { taskId } = req.params;
   const { dueDate } = req.body;
@@ -121,7 +128,7 @@ const updateTaskDueDate = async (
 
 const updateTaskOwner = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { taskId } = req.params;
   const { ownerId } = req.body;
@@ -154,13 +161,17 @@ const updateTaskOwner = async (
 
 const updateTimeEstimation = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { taskId } = req.params;
   const { timeEstimation } = req.body;
 
   try {
-    const task = await updateTimeEstimationById(taskId, timeEstimation, req.user!);
+    const task = await updateTimeEstimationById(
+      taskId,
+      timeEstimation,
+      req.user!,
+    );
     res.status(200).json(task);
   } catch (error) {
     if (error instanceof Error) {
@@ -184,7 +195,7 @@ const updateTimeEstimation = async (
 
 const validateTask = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { taskId } = req.params;
 
@@ -239,7 +250,7 @@ const deleteTask = async (req: Request & { user?: string }, res: Response) => {
 
 const getTasksOfATeam = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { teamId } = req.params;
   try {

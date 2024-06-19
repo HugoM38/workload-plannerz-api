@@ -9,14 +9,22 @@ const createTask = async (
   team: string,
   priority: number,
   timeEstimation: number,
-  dueDate: number
+  dueDate: number,
 ) => {
   const teamId = new mongoose.Types.ObjectId(team);
   const findTeam = await Team.findOne({ _id: teamId });
   if (!findTeam) throw new Error("Team not found");
 
   if (owner === undefined) {
-    const newTask = new Task({ name, priority, team: teamId, dueDate });
+    const newTask = new Task({
+      name,
+      priority,
+      team: teamId,
+      dueDate,
+      timeEstimation,
+      state: "En cours",
+      creationDate: Date.now(),
+    });
     return await newTask.save();
   } else {
     const ownerId = new mongoose.Types.ObjectId(owner);
@@ -40,7 +48,7 @@ const createTask = async (
 const getTasksOfATeamByUserId = async (
   userId: string,
   teamId: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const ownerId = new mongoose.Types.ObjectId(userId);
   const findUser = await userModel.findOne({ _id: ownerId });
@@ -59,7 +67,7 @@ const getTasksOfATeamByUserId = async (
 const updateTaskPriorityById = async (
   taskId: string,
   priority: number,
-  requesterId: string
+  requesterId: string,
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Task not found");
@@ -78,7 +86,7 @@ const updateTaskPriorityById = async (
 const updateTaskDueDateById = async (
   taskId: string,
   dueDate: number,
-  requesterId: string
+  requesterId: string,
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Task not found");
@@ -97,7 +105,7 @@ const updateTaskDueDateById = async (
 const updateTaskOwnerById = async (
   taskId: string,
   owner: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Task not found");
@@ -120,7 +128,7 @@ const updateTaskOwnerById = async (
 const updateTimeEstimationById = async (
   taskId: string,
   timeEstimation: number,
-  requesterId: string
+  requesterId: string,
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Task not found");
@@ -134,7 +142,7 @@ const updateTimeEstimationById = async (
 
   task.timeEstimation = timeEstimation;
   return await task.save();
-}
+};
 
 const validateTaskById = async (taskId: string, requesterId: string) => {
   const task = await Task.findById(taskId);

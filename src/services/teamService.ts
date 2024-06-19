@@ -23,7 +23,7 @@ const createTeam = async (name: string, owner: string) => {
 const newMemberToTeam = async (
   teamId: string,
   userId: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const team = await Team.findById(teamId);
   if (!team) {
@@ -64,7 +64,7 @@ const getTeamMembersById = async (teamId: string, requesterId: string) => {
 const deleteMemberFromTeam = async (
   teamId: string,
   userId: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const team = await Team.findById(teamId);
   if (!team) {
@@ -90,7 +90,7 @@ const deleteMemberFromTeam = async (
 const changeTeamOwner = async (
   teamId: string,
   userId: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const team = await Team.findById(teamId);
   if (!team) {
@@ -112,7 +112,7 @@ const changeTeamOwner = async (
 const changeTeamName = async (
   teamId: string,
   newName: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const team = await Team.findById(teamId);
   if (!team) {
@@ -144,7 +144,7 @@ const getNonMembersInTeam = async (teamId: string, requesterId: string) => {
 const getMemberWorkloadById = async (
   teamId: string,
   userId: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const team = await Team.findById(teamId);
   if (!team) {
@@ -190,7 +190,7 @@ const getTeamWorkloadById = async (teamId: string, requesterId: string) => {
   }
 
   return workload;
-}
+};
 
 export {
   createTeam,
@@ -201,5 +201,5 @@ export {
   changeTeamName,
   getNonMembersInTeam,
   getMemberWorkloadById,
-  getTeamWorkloadById
+  getTeamWorkloadById,
 };

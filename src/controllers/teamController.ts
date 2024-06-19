@@ -30,7 +30,7 @@ const newTeam = async (req: Request, res: Response) => {
 
 const addMemberToTeam = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { teamId } = req.params;
   const { userId } = req.body;
@@ -58,7 +58,7 @@ const addMemberToTeam = async (
 
 const getTeamMembers = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { teamId } = req.params;
 
@@ -83,7 +83,7 @@ const getTeamMembers = async (
 
 const removeMemberFromTeam = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { teamId } = req.params;
   const { userId } = req.body;
@@ -159,7 +159,7 @@ const changeName = async (req: Request & { user?: string }, res: Response) => {
 
 const getNonMembers = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { teamId } = req.params;
 
@@ -184,7 +184,7 @@ const getNonMembers = async (
 
 const getMemberWorkload = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { teamId, memberId } = req.params;
 
@@ -215,7 +215,7 @@ const getMemberWorkload = async (
 
 const getTeamWorkload = async (
   req: Request & { user?: string },
-  res: Response
+  res: Response,
 ) => {
   const { teamId } = req.params;
 

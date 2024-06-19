@@ -1,5 +1,5 @@
 import Joi from "joi";
 
 export const changeNameSchema = Joi.object({
-    name: Joi.string().required(),
+  name: Joi.string().required(),
 });
