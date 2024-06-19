@@ -8,6 +8,7 @@ import {
   getTasksOfATeamByUser,
   newTask,
   updateTaskDueDate,
+  updateTaskName,
   updateTaskOwner,
   updateTaskPriority,
   updateTimeEstimation,
@@ -17,6 +18,7 @@ import { updateTaskPrioritySchema } from "../schemas/tasks/updateTaskPrioritySch
 import { updateTaskDueDateSchema } from "../schemas/tasks/updateTaskDueDateSchema";
 import { updateTaskOwnerSchema } from "../schemas/tasks/updateTaskOwnerSchema";
 import { updateTimeEstimationSchema } from "../schemas/tasks/updateTimeEstimationSchema";
+import { updateTaskNameSchema } from "../schemas/tasks/updateTaskNameSchema";
 
 const router = Router();
 
@@ -52,6 +54,7 @@ router.patch(
   validateRequest(updateTimeEstimationSchema),
   updateTimeEstimation,
 );
+router.patch("/:taskId/name", authMiddleware, validateRequest(updateTaskNameSchema), updateTaskName);
 router.patch("/:taskId/validate", authMiddleware, validateTask);
 router.delete("/:taskId", authMiddleware, deleteTask);
 
