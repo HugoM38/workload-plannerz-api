@@ -1,10 +1,11 @@
 import Team from "../models/teamModel";
 import mongoose from "mongoose";
-import userModel from "../models/userModel";
+import User from "../models/userModel";
+import Task from "../models/taskModel";
 
 const createTeam = async (name: string, owner: string) => {
   const ownerId = new mongoose.Types.ObjectId(owner);
-  const findUser = await userModel.findOne({ _id: ownerId });
+  const findUser = await User.findOne({ _id: ownerId });
   if (!findUser) throw new Error("User not found");
 
   const members = [];
@@ -33,7 +34,7 @@ const newMemberToTeam = async (
     throw new Error("You are not the owner of this team");
   }
 
-  const user = await userModel.findById(userId);
+  const user = await User.findById(userId);
   if (!user) {
     throw new Error("User not found");
   }
@@ -57,10 +58,14 @@ const getTeamMembersById = async (teamId: string, requesterId: string) => {
     throw new Error("You are not a member of this team");
   }
 
-  return await userModel.find({ _id: { $in: team.members } });
-}
+  return await User.find({ _id: { $in: team.members } });
+};
 
-const deleteMemberFromTeam = async (teamId: string, userId: string, requesterId: string) => {
+const deleteMemberFromTeam = async (
+  teamId: string,
+  userId: string,
+  requesterId: string
+) => {
   const team = await Team.findById(teamId);
   if (!team) {
     throw new Error("Team not found");
@@ -80,9 +85,13 @@ const deleteMemberFromTeam = async (teamId: string, userId: string, requesterId:
 
   team.members = team.members.filter((member) => member.toString() !== userId);
   return await team.save();
-}
+};
 
-const changeTeamOwner = async (teamId: string, userId: string, requesterId: string) => {
+const changeTeamOwner = async (
+  teamId: string,
+  userId: string,
+  requesterId: string
+) => {
   const team = await Team.findById(teamId);
   if (!team) {
     throw new Error("Team not found");
@@ -98,9 +107,13 @@ const changeTeamOwner = async (teamId: string, userId: string, requesterId: stri
 
   team.owner = new mongoose.Types.ObjectId(userId);
   return await team.save();
-}
+};
 
-const changeTeamName = async (teamId: string, newName: string, requesterId: string) => {
+const changeTeamName = async (
+  teamId: string,
+  newName: string,
+  requesterId: string
+) => {
   const team = await Team.findById(teamId);
   if (!team) {
     throw new Error("Team not found");
@@ -112,7 +125,7 @@ const changeTeamName = async (teamId: string, newName: string, requesterId: stri
 
   team.name = newName;
   return await team.save();
-}
+};
 
 const getNonMembersInTeam = async (teamId: string, requesterId: string) => {
   const team = await Team.findById(teamId);
@@ -125,7 +138,68 @@ const getNonMembersInTeam = async (teamId: string, requesterId: string) => {
   }
 
   const membersIds = team.members.map((member) => member.toString());
-  return await userModel.find({ _id: { $nin: membersIds } });
+  return await User.find({ _id: { $nin: membersIds } });
+};
+
+const getMemberWorkloadById = async (
+  teamId: string,
+  userId: string,
+  requesterId: string
+) => {
+  const team = await Team.findById(teamId);
+  if (!team) {
+    throw new Error("Team not found");
+  }
+
+  if (!team.members.map((member) => member.toString()).includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (!team.members.map((member) => member.toString()).includes(userId)) {
+    throw new Error("User is not a member of this team");
+  }
+
+  const tasks = await Task.find({ owner: userId, team: teamId });
+  var workload = 0;
+  for (const task of tasks) {
+    workload += task.timeEstimation;
+  }
+
+  return workload;
+};
+
+const getTeamWorkloadById = async (teamId: string, requesterId: string) => {
+  const team = await Team.findById(teamId);
+  if (!team) {
+    throw new Error("Team not found");
+  }
+
+  if (!team.members.map((member) => member.toString()).includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  const tasks = await Task.find({ team: teamId });
+  var workload = 0;
+  for (const task of tasks) {
+    workload += task.timeEstimation;
+  }
+
+  return workload;
 }
 
-export { createTeam, newMemberToTeam, getTeamMembersById, deleteMemberFromTeam, changeTeamOwner, changeTeamName, getNonMembersInTeam };
+export {
+  createTeam,
+  newMemberToTeam,
+  getTeamMembersById,
+  deleteMemberFromTeam,
+  changeTeamOwner,
+  changeTeamName,
+  getNonMembersInTeam,
+  getMemberWorkloadById,
+  getTeamWorkloadById
+};

@@ -4,8 +4,10 @@ import {
   changeTeamOwner,
   createTeam,
   deleteMemberFromTeam,
+  getMemberWorkloadById,
   getNonMembersInTeam,
   getTeamMembersById,
+  getTeamWorkloadById,
   newMemberToTeam,
 } from "../services/teamService";
 
@@ -153,7 +155,7 @@ const changeName = async (req: Request & { user?: string }, res: Response) => {
       res.status(400).json({ error: "An unknown error occurred" });
     }
   }
-}
+};
 
 const getNonMembers = async (
   req: Request & { user?: string },
@@ -180,6 +182,62 @@ const getNonMembers = async (
   }
 };
 
+const getMemberWorkload = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { teamId, memberId } = req.params;
+
+  try {
+    const tasks = await getMemberWorkloadById(teamId, memberId, req.user!);
+    res.status(200).json(tasks);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      } else if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      } else if (error.message === "User not found") {
+        return res.status(404).json({ error: "User not found" });
+      } else if (error.message === "User is not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "User is not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+const getTeamWorkload = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { teamId } = req.params;
+
+  try {
+    const tasks = await getTeamWorkloadById(teamId, req.user!);
+    res.status(200).json(tasks);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      } else if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
 export {
   newTeam,
   addMemberToTeam,
@@ -187,5 +245,7 @@ export {
   removeMemberFromTeam,
   changeOwner,
   changeName,
-  getNonMembers
+  getNonMembers,
+  getMemberWorkload,
+  getTeamWorkload,
 };

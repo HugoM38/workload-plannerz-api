@@ -2,7 +2,7 @@ import { Router } from 'express';
 import validateRequest from '../middlewares/validateRequest';
 import authMiddleware from '../middlewares/authMiddleware';
 import { createTeamSchema } from '../schemas/teams/createTeamSchema';
-import { newTeam, addMemberToTeam, getTeamMembers, removeMemberFromTeam, changeOwner, getNonMembers, changeName } from '../controllers/teamController';
+import { newTeam, addMemberToTeam, getTeamMembers, removeMemberFromTeam, changeOwner, getNonMembers, changeName, getMemberWorkload, getTeamWorkload } from '../controllers/teamController';
 import { addMemberToTeamSchema } from '../schemas/teams/addMemberToTeamSchema';
 import { removeMemberFromTeamSchema } from '../schemas/teams/removeMemberFromTeamSchema';
 import { changeOwnerSchema } from '../schemas/teams/changeOwnerSchema';
@@ -17,5 +17,7 @@ router.post('/:teamId/removeMember', authMiddleware, validateRequest(removeMembe
 router.patch('/:teamId/changeOwner', authMiddleware, validateRequest(changeOwnerSchema), changeOwner);
 router.patch('/:teamId/changeName', authMiddleware, validateRequest(changeNameSchema), changeName);
 router.get('/:teamId/nonMembers', authMiddleware, getNonMembers);
+router.get('/:teamId/:memberId/workload', authMiddleware, getMemberWorkload);
+router.get('/:teamId/workload', authMiddleware, getTeamWorkload);
 
 export default router;
