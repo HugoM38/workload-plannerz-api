@@ -4,8 +4,8 @@ import { register, login } from "../services/authService";
 const signup = async (req: Request, res: Response) => {
   try {
     const { firstname, lastname, job, email, password } = req.body;
-    const user = await register(firstname, lastname, job, email, password);
-    res.status(201).json(user);
+    const { token, user } = await register(firstname, lastname, job, email, password);
+    res.status(201).json({ token, user });
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === "User already exists") {

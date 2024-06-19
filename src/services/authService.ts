@@ -19,7 +19,17 @@ const register = async (
     email,
     password: hashedPassword,
   });
-  return await newUser.save();
+
+  const userCreated = await newUser.save();
+
+  const token = jwt.sign(
+    { id: userCreated._id },
+    process.env.JWT_SECRET as string,
+    { expiresIn: "1h" },
+  );
+
+
+  return { token, user: userCreated };
 };
 
 const login = async (email: string, password: string) => {
