@@ -7,13 +7,14 @@ import {
   updateTaskDueDateById,
   updateTaskOwnerById,
   updateTaskPriorityById,
+  updateTimeEstimationById,
   validateTaskById,
 } from "../services/taskService";
 
 const newTask = async (req: Request, res: Response) => {
   try {
-    const { name, owner, team, priority, dueDate } = req.body;
-    const task = await createTask(name, owner, team, priority, dueDate);
+    const { name, owner, team, priority, timeEstimation, dueDate } = req.body;
+    const task = await createTask(name, owner, team, priority, timeEstimation, dueDate);
     res.status(201).json(task);
   } catch (error) {
     if (error instanceof Error) {
@@ -151,6 +152,36 @@ const updateTaskOwner = async (
   }
 };
 
+const updateTimeEstimation = async (
+  req: Request & { user?: string },
+  res: Response
+) => {
+  const { taskId } = req.params;
+  const { timeEstimation } = req.body;
+
+  try {
+    const task = await updateTimeEstimationById(taskId, timeEstimation, req.user!);
+    res.status(200).json(task);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Task not found") {
+        return res.status(404).json({ error: "Task not found" });
+      }
+      if (error.message === "Team not found") {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
 const validateTask = async (
   req: Request & { user?: string },
   res: Response
@@ -238,6 +269,7 @@ export {
   updateTaskPriority,
   updateTaskDueDate,
   updateTaskOwner,
+  updateTimeEstimation,
   validateTask,
   deleteTask,
 };

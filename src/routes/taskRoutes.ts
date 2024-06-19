@@ -10,11 +10,13 @@ import {
   updateTaskDueDate,
   updateTaskOwner,
   updateTaskPriority,
+  updateTimeEstimation,
   validateTask,
 } from "../controllers/taskController";
 import { updateTaskPrioritySchema } from "../schemas/tasks/updateTaskPrioritySchema";
 import { updateTaskDueDateSchema } from "../schemas/tasks/updateTaskDueDateSchema";
 import { updateTaskOwnerSchema } from "../schemas/tasks/updateTaskOwnerSchema";
+import { updateTimeEstimationSchema } from "../schemas/tasks/updateTimeEstimationSchema";
 
 const router = Router();
 
@@ -43,6 +45,12 @@ router.patch(
   authMiddleware,
   validateRequest(updateTaskOwnerSchema),
   updateTaskOwner
+);
+router.patch(
+  "/:taskId/timeEstimation",
+  authMiddleware,
+  validateRequest(updateTimeEstimationSchema),
+  updateTimeEstimation
 );
 router.patch(
   "/:taskId/validate",

@@ -5,5 +5,6 @@ export const createTaskSchema = Joi.object({
     owner: Joi.string(),
     team: Joi.string().required(),
     priority: Joi.number().required(),
+    timeEstimation: Joi.number().required(),
     dueDate: Joi.number().required(),
 });
