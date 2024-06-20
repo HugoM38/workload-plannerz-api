@@ -1,3 +1,4 @@
+import { time } from "console";
 import Task from "../models/taskModel";
 import Team from "../models/teamModel";
 import userModel from "../models/userModel";
@@ -9,11 +10,18 @@ const createTask = async (
   team: string,
   priority: number,
   timeEstimation: number,
-  dueDate: number
+  dueDate: number, 
+  requesterId: string
 ) => {
   const teamId = new mongoose.Types.ObjectId(team);
   const findTeam = await Team.findOne({ _id: teamId });
   if (!findTeam) throw new Error("Team not found");
+
+  if (!findTeam.members.map((member) => member.toString()).includes(requesterId)) {
+    throw new Error("You are not a member of this team");
+  }
+
+  if (dueDate < Date.now()) throw new Error("Due date must be after the current date");
 
   if (owner === undefined) {
     const newTask = new Task({
@@ -90,6 +98,10 @@ const updateTaskDueDateById = async (
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Task not found");
+
+  if (task.creationDate > dueDate) {
+    throw new Error("Due date must be after the creation date");
+  }
 
   const team = await Team.findById(task.team);
   if (!team) throw new Error("Team not found");

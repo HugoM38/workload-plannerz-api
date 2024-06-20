@@ -12,7 +12,7 @@ import {
   validateTaskById,
 } from "../services/taskService";
 
-const newTask = async (req: Request, res: Response) => {
+const newTask = async (req: Request & { user?: string }, res: Response) => {
   try {
     const { name, owner, team, priority, timeEstimation, dueDate } = req.body;
     const task = await createTask(
@@ -22,6 +22,7 @@ const newTask = async (req: Request, res: Response) => {
       priority,
       timeEstimation,
       dueDate,
+      req.user!,
     );
     res.status(201).json(task);
   } catch (error) {
@@ -31,6 +32,16 @@ const newTask = async (req: Request, res: Response) => {
       }
       if (error.message === "User not found") {
         return res.status(404).json({ error: "User not found" });
+      }
+      if (error.message === "You are not a member of this team") {
+        return res
+          .status(403)
+          .json({ error: "You are not a member of this team" });
+      }
+      if (error.message === "Due date must be after the current date") {
+        return res
+          .status(400)
+          .json({ error: "Due date must be after the current date" });
       }
       res.status(400).json({ error: error.message });
     } else {
@@ -119,6 +130,12 @@ const updateTaskDueDate = async (
         return res
           .status(403)
           .json({ error: "You are not a member of this team" });
+      }
+
+      if (error.message === "Due date must be after the creation date") {
+        return res
+          .status(400)
+          .json({ error: "Due date must be after the creation date" });
       }
       res.status(400).json({ error: error.message });
     } else {
