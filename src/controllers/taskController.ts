@@ -41,11 +41,9 @@ const newTask = async (req: Request & { user?: string }, res: Response) => {
       if (
         error.message === "La date d'échéance doit être après la date actuelle"
       ) {
-        return res
-          .status(400)
-          .json({
-            error: "La date d'échéance doit être après la date actuelle",
-          });
+        return res.status(400).json({
+          error: "La date d'échéance doit être après la date actuelle",
+        });
       }
       res.status(400).json({ error: error.message });
     } else {
@@ -139,11 +137,9 @@ const updateTaskDueDate = async (
         error.message ===
         "La date d'échéance doit être après la date de création"
       ) {
-        return res
-          .status(400)
-          .json({
-            error: "La date d'échéance doit être après la date de création",
-          });
+        return res.status(400).json({
+          error: "La date d'échéance doit être après la date de création",
+        });
       }
       res.status(400).json({ error: error.message });
     } else {
