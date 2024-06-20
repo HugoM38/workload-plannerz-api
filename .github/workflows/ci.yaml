@@ -28,7 +28,7 @@ jobs:
         run: npm run build
 
       - name: Run tests
-        run: npm tests
+        run: npm run test
 
       - name: Deploy to Heroku
         if: success()
