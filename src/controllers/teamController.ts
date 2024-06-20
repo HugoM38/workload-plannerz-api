@@ -42,7 +42,9 @@ const addMemberToTeam = async (
     if (error instanceof Error) {
       if (error.message === "Équipe non trouvée") {
         return res.status(404).json({ error: "Équipe non trouvée" });
-      } else if (error.message === "Vous n'êtes pas le propriétaire de cette équipe") {
+      } else if (
+        error.message === "Vous n'êtes pas le propriétaire de cette équipe"
+      ) {
         return res
           .status(403)
           .json({ error: "Vous n'êtes pas le propriétaire de cette équipe" });
@@ -95,7 +97,9 @@ const removeMemberFromTeam = async (
     if (error instanceof Error) {
       if (error.message === "Équipe non trouvée") {
         return res.status(404).json({ error: "Équipe non trouvée" });
-      } else if (error.message === "Vous n'êtes pas le propriétaire de cette équipe") {
+      } else if (
+        error.message === "Vous n'êtes pas le propriétaire de cette équipe"
+      ) {
         return res
           .status(403)
           .json({ error: "Vous n'êtes pas le propriétaire de cette équipe" });
@@ -120,7 +124,9 @@ const changeOwner = async (req: Request & { user?: string }, res: Response) => {
     if (error instanceof Error) {
       if (error.message === "Équipe non trouvée") {
         return res.status(404).json({ error: "Équipe non trouvée" });
-      } else if (error.message === "Vous n'êtes pas le propriétaire de cette équipe") {
+      } else if (
+        error.message === "Vous n'êtes pas le propriétaire de cette équipe"
+      ) {
         return res
           .status(403)
           .json({ error: "Vous n'êtes pas le propriétaire de cette équipe" });
@@ -145,7 +151,9 @@ const changeName = async (req: Request & { user?: string }, res: Response) => {
     if (error instanceof Error) {
       if (error.message === "Équipe non trouvée") {
         return res.status(404).json({ error: "Équipe non trouvée" });
-      } else if (error.message === "Vous n'êtes pas le propriétaire de cette équipe") {
+      } else if (
+        error.message === "Vous n'êtes pas le propriétaire de cette équipe"
+      ) {
         return res
           .status(403)
           .json({ error: "Vous n'êtes pas le propriétaire de cette équipe" });
@@ -190,7 +198,7 @@ const getMemberWorkload = async (
 
   try {
     const workload = await getMemberWorkloadById(teamId, memberId, req.user!);
-    res.status(200).json({workload});
+    res.status(200).json({ workload });
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === "Équipe non trouvée") {
@@ -201,7 +209,9 @@ const getMemberWorkload = async (
           .json({ error: "Vous n'êtes pas membre de cette équipe" });
       } else if (error.message === "Utilisateur non trouvé") {
         return res.status(404).json({ error: "Utilisateur non trouvé" });
-      } else if (error.message === "L'utilisateur n'est pas membre de cette équipe") {
+      } else if (
+        error.message === "L'utilisateur n'est pas membre de cette équipe"
+      ) {
         return res
           .status(403)
           .json({ error: "L'utilisateur n'est pas membre de cette équipe" });
@@ -221,7 +231,7 @@ const getTeamWorkload = async (
 
   try {
     const workload = await getTeamWorkloadById(teamId, req.user!);
-    res.status(200).json({workload});
+    res.status(200).json({ workload });
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === "Équipe non trouvée") {

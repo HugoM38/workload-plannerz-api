@@ -38,10 +38,14 @@ const newTask = async (req: Request & { user?: string }, res: Response) => {
           .status(403)
           .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
-      if (error.message === "La date d'échéance doit être après la date actuelle") {
+      if (
+        error.message === "La date d'échéance doit être après la date actuelle"
+      ) {
         return res
           .status(400)
-          .json({ error: "La date d'échéance doit être après la date actuelle" });
+          .json({
+            error: "La date d'échéance doit être après la date actuelle",
+          });
       }
       res.status(400).json({ error: error.message });
     } else {
@@ -131,10 +135,15 @@ const updateTaskDueDate = async (
           .status(403)
           .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
-      if (error.message === "La date d'échéance doit être après la date de création") {
+      if (
+        error.message ===
+        "La date d'échéance doit être après la date de création"
+      ) {
         return res
           .status(400)
-          .json({ error: "La date d'échéance doit être après la date de création" });
+          .json({
+            error: "La date d'échéance doit être après la date de création",
+          });
       }
       res.status(400).json({ error: error.message });
     } else {
@@ -238,7 +247,7 @@ const updateTaskName = async (
       res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
-}
+};
 
 const validateTask = async (
   req: Request & { user?: string },

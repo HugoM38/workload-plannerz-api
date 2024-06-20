@@ -9,18 +9,21 @@ const createTask = async (
   team: string,
   priority: number,
   timeEstimation: number,
-  dueDate: number, 
-  requesterId: string
+  dueDate: number,
+  requesterId: string,
 ) => {
   const teamId = new mongoose.Types.ObjectId(team);
   const findTeam = await Team.findOne({ _id: teamId });
   if (!findTeam) throw new Error("Équipe non trouvée");
 
-  if (!findTeam.members.map((member) => member.toString()).includes(requesterId)) {
+  if (
+    !findTeam.members.map((member) => member.toString()).includes(requesterId)
+  ) {
     throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
-  if (dueDate < Date.now()) throw new Error("La date d'échéance doit être après la date actuelle");
+  if (dueDate < Date.now())
+    throw new Error("La date d'échéance doit être après la date actuelle");
 
   if (owner === undefined) {
     const newTask = new Task({
@@ -55,7 +58,7 @@ const createTask = async (
 const getTasksOfATeamByUserId = async (
   userId: string,
   teamId: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const ownerId = new mongoose.Types.ObjectId(userId);
   const findUser = await userModel.findOne({ _id: ownerId });
@@ -74,7 +77,7 @@ const getTasksOfATeamByUserId = async (
 const updateTaskPriorityById = async (
   taskId: string,
   priority: number,
-  requesterId: string
+  requesterId: string,
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Tâche non trouvée");
@@ -93,7 +96,7 @@ const updateTaskPriorityById = async (
 const updateTaskDueDateById = async (
   taskId: string,
   dueDate: number,
-  requesterId: string
+  requesterId: string,
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Tâche non trouvée");
@@ -116,7 +119,7 @@ const updateTaskDueDateById = async (
 const updateTaskOwnerById = async (
   taskId: string,
   owner: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Tâche non trouvée");
@@ -139,7 +142,7 @@ const updateTaskOwnerById = async (
 const updateTimeEstimationById = async (
   taskId: string,
   timeEstimation: number,
-  requesterId: string
+  requesterId: string,
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Tâche non trouvée");
@@ -158,7 +161,7 @@ const updateTimeEstimationById = async (
 const updateTaskNameById = async (
   taskId: string,
   name: string,
-  requesterId: string
+  requesterId: string,
 ) => {
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Tâche non trouvée");
