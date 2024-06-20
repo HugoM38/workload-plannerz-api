@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "ts-node src/app.ts",
+    "dev": "ts-node app.ts",
     "test": "jest",
     "postinstall": "tsc"
   },
