@@ -10,7 +10,7 @@ const register = async (
   password: string,
 ) => {
   const user = await User.findOne({ email });
-  if (user) throw new Error("User already exists");
+  if (user) throw new Error("Utilisateur déjà existant");
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({
     firstname,
@@ -28,16 +28,15 @@ const register = async (
     { expiresIn: "1h" },
   );
 
-
   return { token, user: userCreated };
 };
 
 const login = async (email: string, password: string) => {
   const findUser = await User.findOne({ email });
-  if (!findUser) throw new Error("User not found");
+  if (!findUser) throw new Error("Utilisateur non trouvé");
 
   const isMatch = await bcrypt.compare(password, findUser.password);
-  if (!isMatch) throw new Error("Invalid credentials");
+  if (!isMatch) throw new Error("Identifiants invalides");
 
   const token = jwt.sign(
     { id: findUser._id },

@@ -18,12 +18,12 @@ const newTeam = async (req: Request, res: Response) => {
     res.status(201).json(team);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
+      if (error.message === "Utilisateur non trouvé") {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -40,18 +40,20 @@ const addMemberToTeam = async (
     res.status(200).json(team);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
-      } else if (error.message === "You are not the owner of this team") {
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
+      } else if (
+        error.message === "Vous n'êtes pas le propriétaire de cette équipe"
+      ) {
         return res
           .status(403)
-          .json({ error: "You are not the owner of this team" });
-      } else if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
+          .json({ error: "Vous n'êtes pas le propriétaire de cette équipe" });
+      } else if (error.message === "Utilisateur non trouvé") {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -67,16 +69,16 @@ const getTeamMembers = async (
     res.status(200).json(members);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
-      } else if (error.message === "You are not a member of this team") {
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
+      } else if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -93,18 +95,20 @@ const removeMemberFromTeam = async (
     res.status(200).json(team);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
-      } else if (error.message === "You are not the owner of this team") {
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
+      } else if (
+        error.message === "Vous n'êtes pas le propriétaire de cette équipe"
+      ) {
         return res
           .status(403)
-          .json({ error: "You are not the owner of this team" });
-      } else if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
+          .json({ error: "Vous n'êtes pas le propriétaire de cette équipe" });
+      } else if (error.message === "Utilisateur non trouvé") {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -118,18 +122,20 @@ const changeOwner = async (req: Request & { user?: string }, res: Response) => {
     res.status(200).json(team);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
-      } else if (error.message === "You are not the owner of this team") {
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
+      } else if (
+        error.message === "Vous n'êtes pas le propriétaire de cette équipe"
+      ) {
         return res
           .status(403)
-          .json({ error: "You are not the owner of this team" });
-      } else if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
+          .json({ error: "Vous n'êtes pas le propriétaire de cette équipe" });
+      } else if (error.message === "Utilisateur non trouvé") {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -143,16 +149,18 @@ const changeName = async (req: Request & { user?: string }, res: Response) => {
     res.status(200).json(team);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
-      } else if (error.message === "You are not the owner of this team") {
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
+      } else if (
+        error.message === "Vous n'êtes pas le propriétaire de cette équipe"
+      ) {
         return res
           .status(403)
-          .json({ error: "You are not the owner of this team" });
+          .json({ error: "Vous n'êtes pas le propriétaire de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -168,16 +176,16 @@ const getNonMembers = async (
     res.status(200).json(nonMembers);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
-      } else if (error.message === "You are not a member of this team") {
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
+      } else if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -190,25 +198,27 @@ const getMemberWorkload = async (
 
   try {
     const workload = await getMemberWorkloadById(teamId, memberId, req.user!);
-    res.status(200).json({workload});
+    res.status(200).json({ workload });
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
-      } else if (error.message === "You are not a member of this team") {
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
+      } else if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
-      } else if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
-      } else if (error.message === "User is not a member of this team") {
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
+      } else if (error.message === "Utilisateur non trouvé") {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
+      } else if (
+        error.message === "L'utilisateur n'est pas membre de cette équipe"
+      ) {
         return res
           .status(403)
-          .json({ error: "User is not a member of this team" });
+          .json({ error: "L'utilisateur n'est pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -221,19 +231,19 @@ const getTeamWorkload = async (
 
   try {
     const workload = await getTeamWorkloadById(teamId, req.user!);
-    res.status(200).json({workload});
+    res.status(200).json({ workload });
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
-      } else if (error.message === "You are not a member of this team") {
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
+      } else if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };

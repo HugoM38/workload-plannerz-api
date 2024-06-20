@@ -12,7 +12,7 @@ import {
   validateTaskById,
 } from "../services/taskService";
 
-const newTask = async (req: Request, res: Response) => {
+const newTask = async (req: Request & { user?: string }, res: Response) => {
   try {
     const { name, owner, team, priority, timeEstimation, dueDate } = req.body;
     const task = await createTask(
@@ -22,19 +22,32 @@ const newTask = async (req: Request, res: Response) => {
       priority,
       timeEstimation,
       dueDate,
+      req.user!,
     );
     res.status(201).json(task);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
+      if (error.message === "Utilisateur non trouvé") {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
+      }
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
+        return res
+          .status(403)
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
+      }
+      if (
+        error.message === "La date d'échéance doit être après la date actuelle"
+      ) {
+        return res.status(400).json({
+          error: "La date d'échéance doit être après la date actuelle",
+        });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -49,20 +62,20 @@ const getTasksOfATeamByUser = async (
     res.status(200).json(tasks);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
+      if (error.message === "Utilisateur non trouvé") {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
       }
-      if (error.message === "You are not a member of this team") {
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -79,20 +92,20 @@ const updateTaskPriority = async (
     res.status(200).json(task);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Task not found") {
-        return res.status(404).json({ error: "Task not found" });
+      if (error.message === "Tâche non trouvée") {
+        return res.status(404).json({ error: "Tâche non trouvée" });
       }
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "You are not a member of this team") {
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -109,20 +122,28 @@ const updateTaskDueDate = async (
     res.status(200).json(task);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Task not found") {
-        return res.status(404).json({ error: "Task not found" });
+      if (error.message === "Tâche non trouvée") {
+        return res.status(404).json({ error: "Tâche non trouvée" });
       }
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "You are not a member of this team") {
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
+      }
+      if (
+        error.message ===
+        "La date d'échéance doit être après la date de création"
+      ) {
+        return res.status(400).json({
+          error: "La date d'échéance doit être après la date de création",
+        });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -139,23 +160,23 @@ const updateTaskOwner = async (
     res.status(200).json(task);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Task not found") {
-        return res.status(404).json({ error: "Task not found" });
+      if (error.message === "Tâche non trouvée") {
+        return res.status(404).json({ error: "Tâche non trouvée" });
       }
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
+      if (error.message === "Utilisateur non trouvé") {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
       }
-      if (error.message === "You are not a member of this team") {
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -176,20 +197,20 @@ const updateTimeEstimation = async (
     res.status(200).json(task);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Task not found") {
-        return res.status(404).json({ error: "Task not found" });
+      if (error.message === "Tâche non trouvée") {
+        return res.status(404).json({ error: "Tâche non trouvée" });
       }
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "You are not a member of this team") {
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -206,23 +227,23 @@ const updateTaskName = async (
     res.status(200).json(task);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Task not found") {
-        return res.status(404).json({ error: "Task not found" });
+      if (error.message === "Tâche non trouvée") {
+        return res.status(404).json({ error: "Tâche non trouvée" });
       }
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "You are not a member of this team") {
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
-}
+};
 
 const validateTask = async (
   req: Request & { user?: string },
@@ -235,20 +256,20 @@ const validateTask = async (
     res.status(204).end();
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Task not found") {
-        return res.status(404).json({ error: "Task not found" });
+      if (error.message === "Tâche non trouvée") {
+        return res.status(404).json({ error: "Tâche non trouvée" });
       }
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "You are not a member of this team") {
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -261,20 +282,20 @@ const deleteTask = async (req: Request & { user?: string }, res: Response) => {
     res.status(204).end();
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Task not found") {
-        return res.status(404).json({ error: "Task not found" });
+      if (error.message === "Tâche non trouvée") {
+        return res.status(404).json({ error: "Tâche non trouvée" });
       }
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "You are not a member of this team") {
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -289,17 +310,17 @@ const getTasksOfATeam = async (
     res.status(200).json(tasks);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Team not found") {
-        return res.status(404).json({ error: "Team not found" });
+      if (error.message === "Équipe non trouvée") {
+        return res.status(404).json({ error: "Équipe non trouvée" });
       }
-      if (error.message === "You are not a member of this team") {
+      if (error.message === "Vous n'êtes pas membre de cette équipe") {
         return res
           .status(403)
-          .json({ error: "You are not a member of this team" });
+          .json({ error: "Vous n'êtes pas membre de cette équipe" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };

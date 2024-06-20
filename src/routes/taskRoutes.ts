@@ -54,7 +54,12 @@ router.patch(
   validateRequest(updateTimeEstimationSchema),
   updateTimeEstimation,
 );
-router.patch("/:taskId/name", authMiddleware, validateRequest(updateTaskNameSchema), updateTaskName);
+router.patch(
+  "/:taskId/name",
+  authMiddleware,
+  validateRequest(updateTaskNameSchema),
+  updateTaskName,
+);
 router.patch("/:taskId/validate", authMiddleware, validateTask);
 router.delete("/:taskId", authMiddleware, deleteTask);
 
