@@ -76,7 +76,7 @@ describe('AuthService', () => {
 
             await mockedUser.save();
 
-            await expect(AuthService.register('Jane', 'Smith', 'Tester', 'existing@example.com', 'password')).rejects.toThrow('User already exists');
+            await expect(AuthService.register('Jane', 'Smith', 'Tester', 'existing@example.com', 'password')).rejects.toThrow('Utilisateur déjà existant');
         });
     });
 
@@ -112,7 +112,7 @@ describe('AuthService', () => {
 
         it('should throw an error if user is not found', async () => {
             jest.spyOn(User, 'findOne').mockResolvedValue(null);
-            await expect(AuthService.login('nonexistent@example.com', 'password')).rejects.toThrow('User not found');
+            await expect(AuthService.login('nonexistent@example.com', 'password')).rejects.toThrow('Utilisateur non trouvé');
             expect(User.findOne).toHaveBeenCalledWith({ email: 'nonexistent@example.com' });
         });
 
@@ -134,7 +134,7 @@ describe('AuthService', () => {
 
             (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-            await expect(AuthService.login('test@example.com', 'invalidPassword')).rejects.toThrow('Invalid credentials');
+            await expect(AuthService.login('test@example.com', 'invalidPassword')).rejects.toThrow('Identifiants invalides');
 
             expect(User.findOne).toHaveBeenCalledWith({ email: 'test@example.com' });
             expect(bcrypt.compare).toHaveBeenCalledWith('invalidPassword', hashedPassword);
