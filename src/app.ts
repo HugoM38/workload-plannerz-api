@@ -1,12 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import authRoutes from "./src/routes/authRoutes";
+import authRoutes from "./routes/authRoutes";
 import dotenv from "dotenv";
 import cors from "cors";
-import taskRoutes from "./src/routes/taskRoutes";
-import teamRoutes from "./src/routes/teamRoutes";
-import userRoutes from "./src/routes/userRoutes";
+import taskRoutes from "./routes/taskRoutes";
+import teamRoutes from "./routes/teamRoutes";
+import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 
