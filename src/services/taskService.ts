@@ -1,4 +1,3 @@
-import { time } from "console";
 import Task from "../models/taskModel";
 import Team from "../models/teamModel";
 import userModel from "../models/userModel";
@@ -15,13 +14,13 @@ const createTask = async (
 ) => {
   const teamId = new mongoose.Types.ObjectId(team);
   const findTeam = await Team.findOne({ _id: teamId });
-  if (!findTeam) throw new Error("Team not found");
+  if (!findTeam) throw new Error("Équipe non trouvée");
 
   if (!findTeam.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
-  if (dueDate < Date.now()) throw new Error("Due date must be after the current date");
+  if (dueDate < Date.now()) throw new Error("La date d'échéance doit être après la date actuelle");
 
   if (owner === undefined) {
     const newTask = new Task({
@@ -37,7 +36,7 @@ const createTask = async (
   } else {
     const ownerId = new mongoose.Types.ObjectId(owner);
     const findUser = await userModel.findOne({ _id: ownerId });
-    if (!findUser) throw new Error("User not found");
+    if (!findUser) throw new Error("Utilisateur non trouvé");
 
     const newTask = new Task({
       name,
@@ -60,13 +59,13 @@ const getTasksOfATeamByUserId = async (
 ) => {
   const ownerId = new mongoose.Types.ObjectId(userId);
   const findUser = await userModel.findOne({ _id: ownerId });
-  if (!findUser) throw new Error("User not found");
+  if (!findUser) throw new Error("Utilisateur non trouvé");
 
   const team = await Team.findById(teamId);
-  if (!team) throw new Error("Team not found");
+  if (!team) throw new Error("Équipe non trouvée");
 
   if (!team.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
   return await Task.find({ owner: ownerId, team: teamId });
@@ -78,13 +77,13 @@ const updateTaskPriorityById = async (
   requesterId: string
 ) => {
   const task = await Task.findById(taskId);
-  if (!task) throw new Error("Task not found");
+  if (!task) throw new Error("Tâche non trouvée");
 
   const team = await Team.findById(task.team);
-  if (!team) throw new Error("Team not found");
+  if (!team) throw new Error("Équipe non trouvée");
 
   if (!team.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
   task.priority = priority;
@@ -97,17 +96,17 @@ const updateTaskDueDateById = async (
   requesterId: string
 ) => {
   const task = await Task.findById(taskId);
-  if (!task) throw new Error("Task not found");
+  if (!task) throw new Error("Tâche non trouvée");
 
   if (task.creationDate > dueDate) {
-    throw new Error("Due date must be after the creation date");
+    throw new Error("La date d'échéance doit être après la date de création");
   }
 
   const team = await Team.findById(task.team);
-  if (!team) throw new Error("Team not found");
+  if (!team) throw new Error("Équipe non trouvée");
 
   if (!team.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
   task.dueDate = dueDate;
@@ -120,18 +119,18 @@ const updateTaskOwnerById = async (
   requesterId: string
 ) => {
   const task = await Task.findById(taskId);
-  if (!task) throw new Error("Task not found");
+  if (!task) throw new Error("Tâche non trouvée");
 
   const team = await Team.findById(task.team);
-  if (!team) throw new Error("Team not found");
+  if (!team) throw new Error("Équipe non trouvée");
 
   if (!team.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
   const ownerId = new mongoose.Types.ObjectId(owner);
   const findUser = await userModel.findOne({ _id: ownerId });
-  if (!findUser) throw new Error("User not found");
+  if (!findUser) throw new Error("Utilisateur non trouvé");
 
   task.owner = ownerId;
   return await task.save();
@@ -143,13 +142,13 @@ const updateTimeEstimationById = async (
   requesterId: string
 ) => {
   const task = await Task.findById(taskId);
-  if (!task) throw new Error("Task not found");
+  if (!task) throw new Error("Tâche non trouvée");
 
   const team = await Team.findById(task.team);
-  if (!team) throw new Error("Team not found");
+  if (!team) throw new Error("Équipe non trouvée");
 
   if (!team.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
   task.timeEstimation = timeEstimation;
@@ -162,13 +161,13 @@ const updateTaskNameById = async (
   requesterId: string
 ) => {
   const task = await Task.findById(taskId);
-  if (!task) throw new Error("Task not found");
+  if (!task) throw new Error("Tâche non trouvée");
 
   const team = await Team.findById(task.team);
-  if (!team) throw new Error("Team not found");
+  if (!team) throw new Error("Équipe non trouvée");
 
   if (!team.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
   task.name = name;
@@ -177,13 +176,13 @@ const updateTaskNameById = async (
 
 const validateTaskById = async (taskId: string, requesterId: string) => {
   const task = await Task.findById(taskId);
-  if (!task) throw new Error("Task not found");
+  if (!task) throw new Error("Tâche non trouvée");
 
   const team = await Team.findById(task.team);
-  if (!team) throw new Error("Team not found");
+  if (!team) throw new Error("Équipe non trouvée");
 
   if (!team.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
   task.state = "Validée";
@@ -192,13 +191,13 @@ const validateTaskById = async (taskId: string, requesterId: string) => {
 
 const deleteTaskById = async (taskId: string, requesterId: string) => {
   const task = await Task.findById(taskId);
-  if (!task) throw new Error("Task not found");
+  if (!task) throw new Error("Tâche non trouvée");
 
   const team = await Team.findById(task.team);
-  if (!team) throw new Error("Team not found");
+  if (!team) throw new Error("Équipe non trouvée");
 
   if (!team.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
   return await Task.findByIdAndDelete(taskId);
@@ -206,10 +205,10 @@ const deleteTaskById = async (taskId: string, requesterId: string) => {
 
 const getTasksOfATeamById = async (teamId: string, requesterId: string) => {
   const team = await Team.findById(teamId);
-  if (!team) throw new Error("Team not found");
+  if (!team) throw new Error("Équipe non trouvée");
 
   if (!team.members.map((member) => member.toString()).includes(requesterId)) {
-    throw new Error("You are not a member of this team");
+    throw new Error("Vous n'êtes pas membre de cette équipe");
   }
 
   return await Task.find({ team: teamId });

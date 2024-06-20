@@ -8,12 +8,12 @@ const signup = async (req: Request, res: Response) => {
     res.status(201).json({ token, user });
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "User already exists") {
-        return res.status(409).json({ error: "User already exists" });
+      if (error.message === "Utilisateur déjà existant") {
+        return res.status(409).json({ error: "Utilisateur déjà existant" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
@@ -25,12 +25,12 @@ const signin = async (req: Request, res: Response) => {
     res.status(200).json({ token, user });
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "User not found") {
-        return res.status(404).json({ error: "User not found" });
+      if (error.message === "Utilisateur non trouvé") {
+        return res.status(404).json({ error: "Utilisateur non trouvé" });
       }
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "Une erreur inconnue s'est produite" });
     }
   }
 };
