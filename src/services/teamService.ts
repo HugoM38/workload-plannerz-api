@@ -167,7 +167,9 @@ const getMemberWorkloadById = async (
   const tasks = await Task.find({ owner: userId, team: teamId });
   var workload = 0;
   for (const task of tasks) {
-    workload += task.timeEstimation;
+    if(task.state === "En cours") {
+      workload += task.timeEstimation;
+    }
   }
 
   return workload;
@@ -186,7 +188,9 @@ const getTeamWorkloadById = async (teamId: string, requesterId: string) => {
   const tasks = await Task.find({ team: teamId });
   var workload = 0;
   for (const task of tasks) {
-    workload += task.timeEstimation;
+    if(task.state === "En cours") {
+      workload += task.timeEstimation;
+    }
   }
 
   return workload;
