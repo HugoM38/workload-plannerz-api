@@ -10,6 +10,7 @@ import {
   getMemberWorkloadById,
   getTeamWorkloadById,
 } from "../src/services/teamService";
+import { stat } from "fs";
 
 describe("TeamService", () => {
   let teamId: string;
@@ -287,12 +288,14 @@ describe("TeamService", () => {
           owner: userObjectId,
           team: teamObjectId,
           timeEstimation: 5,
+          state: "En cours",
         },
         {
           _id: new mongoose.Types.ObjectId(),
           owner: userObjectId,
           team: teamObjectId,
           timeEstimation: 3,
+          state: "En cours",
         },
       ];
 
@@ -426,11 +429,13 @@ describe("TeamService", () => {
           _id: new mongoose.Types.ObjectId(),
           team: teamObjectId,
           timeEstimation: 5,
+          state: "En cours",
         },
         {
           _id: new mongoose.Types.ObjectId(),
           team: teamObjectId,
           timeEstimation: 3,
+          state: "En cours",
         },
       ];
 
