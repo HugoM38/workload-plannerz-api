@@ -1,4 +1,3 @@
-import { mock } from 'ts-mockito';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
@@ -41,7 +40,8 @@ describe('AuthService', () => {
                 password: 'password123',
             };
 
-            (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
+            (bcrypt.hash as jest.Mock).mockImplementation(async () => 'hashedPassword');
+
             (jwt.sign as jest.Mock).mockReturnValue('mockedToken');
 
             const result = await AuthService.register(newUser.firstname, newUser.lastname, newUser.job, newUser.email, newUser.password);
@@ -88,6 +88,7 @@ describe('AuthService', () => {
             } as any);
 
             (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
             (jwt.sign as jest.Mock).mockReturnValue('mockedToken');
 
             const result = await AuthService.login('test@example.com', plainPassword);
@@ -101,6 +102,11 @@ describe('AuthService', () => {
             expect(result.user.email).toBe('test@example.com');
             expect(User.findOne).toHaveBeenCalledWith({ email: 'test@example.com' });
             expect(bcrypt.compare).toHaveBeenCalledWith(plainPassword, hashedPassword);
+            expect(jwt.sign).toHaveBeenCalledWith(
+                { id: userId.toString() },
+                expect.any(String),
+                { expiresIn: '1h' }
+            );
         });
 
         it('should throw an error if user is not found', async () => {
@@ -124,6 +130,7 @@ describe('AuthService', () => {
             await mockedUser.save();
 
             jest.spyOn(User, 'findOne').mockResolvedValue(mockedUser);
+
             (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
             await expect(AuthService.login('test@example.com', 'invalidPassword')).rejects.toThrow('Identifiants invalides');
